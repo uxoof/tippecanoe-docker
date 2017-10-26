@@ -20,6 +20,20 @@ WORKDIR /
 RUN rm -rf /tmp/tippecanoe-src \
   && apt-get -y remove --purge build-essential && apt-get -y autoremove
 
+# MButil - Create a directory and copy in all files
+RUN mkdir -p /tmp/mbutil
+RUN git clone https://github.com//mapbox/mbutil.git /tmp/mbutil
+WORKDIR /tmp/mbutil
+
+# Build tippecanoe
+RUN make \
+  && make install
+
+# Remove the temp directory and unneeded packages
+WORKDIR /
+RUN rm -rf /tmp/mbutil \
+  && apt-get -y remove --purge build-essential && apt-get -y autoremove
+
 # Run the default command to show usage
 CMD tippecanoe --help
 
